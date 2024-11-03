@@ -19,6 +19,11 @@
 
 	<properties>
 		<java.version>17</java.version>
+    <checkstyle.version>3.5.0</checkstyle.version>
+    <pmd.version>3.22.0</pmd.version>
+    <spotbugs.version>4.8.6.4</spotbugs.version>
+    <jacoco.version>0.8.11</jacoco.version>
+    <code-checks>code-checks</code-checks>
 	</properties>
 
 	<dependencies>
@@ -53,6 +58,87 @@
 					</excludes>
 				</configuration>
 			</plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <version>${pmd.version}</version>
+        <configuration>
+          <linkXRef>false</linkXRef>
+          <minimumTokens>100</minimumTokens>
+          <targetJdk>${java.version}</targetJdk>
+          <rulesets>
+            <ruleset>${code-checks}/pmd-ruleset.xml</ruleset>
+          </rulesets>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <version>${spotbugs.version}</version>
+        <configuration>
+          <excludeFilterFile>${code-checks}/spotbugs-exclude.xml</excludeFilterFile>
+        </configuration>
+        <executions>
+          <execution>
+            <id>analyze-compile</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>${checkstyle.version}</version>
+        <dependencies>
+          <dependency>
+            <groupId>com.puppycrawl.tools</groupId>
+            <artifactId>checkstyle</artifactId>
+            <version>10.18.2</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <sourceDirectories>src</sourceDirectories>
+          <testSourceDirectories>test</testSourceDirectories>
+          <failOnViolation>true</failOnViolation>
+          <configLocation>${code-checks}/google_checks.xml</configLocation>
+          <inputEncoding>UTF-8</inputEncoding>
+          <consoleOutput>true</consoleOutput>
+          <failsOnError>true</failsOnError>
+          <consoleOutput>true</consoleOutput>
+          <linkXRef>true</linkXRef>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>${jacoco.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>report</id>
+            <phase>test</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
+        <!-- <configuration> -->
+        <!--   <excludes> -->
+        <!--     <exclude>fmauro/api/cannabis/CannabisApplication.class</exclude> -->
+        <!--   </excludes> -->
+        <!-- </configuration> -->
+      </plugin>
 		</plugins>
 	</build>
 
