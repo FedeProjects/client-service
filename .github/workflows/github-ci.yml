@@ -25,6 +25,8 @@ jobs:
     needs: build
 
     steps:
+    - uses: actions/checkout@v4
+
     - name: Run tests
       run: mvn test
 
