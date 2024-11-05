@@ -47,11 +47,12 @@ jobs:
     - name: Spotbugs
       run: mvn spotbugs:check
 
-    - name: Generate JaCoCo report
-      run: mvn jacoco:report
-
-    - name: Upload JaCoCo report
-      uses: actions/upload-artifact@v3
-      with:
-        name: jacoco-report
-        path: target/site/jacoco/
+    # Comento la generación de reporte de Jacoco 
+    # - name: Generate JaCoCo report
+    #   run: mvn jacoco:report
+    # Subida del resultado del reporte de Jacoco al artifact por si es útil en el futuro
+    # - name: Upload JaCoCo report
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: jacoco-report
+    #     path: target/site/jacoco/
